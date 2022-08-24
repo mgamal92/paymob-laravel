@@ -13,7 +13,9 @@
             "email": "mg.dev1992@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "guzzlehttp/guzzle": "^7.4"
+    },
     "extra": {
         "laravel": {
             "providers": [

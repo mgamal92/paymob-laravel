@@ -1,10 +1,10 @@
 <?php
 
-namespace MG\PayMob;
+namespace MG\PayMob\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class PayMob extends Facade
+class Paymob extends Facade
 {
     /**
      * Get the registered name of the component.

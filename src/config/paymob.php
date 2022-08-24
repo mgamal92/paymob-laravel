@@ -26,7 +26,6 @@ return [
     |
     */
     'auth' => [
-        'username'    => env('PAYMOB_USERNAME'),
-        'password'    => env('PAYMOB_PASSWORD'),
+        'api_key'    => env('PAYMOB_API_KEY'),
     ],
 ];

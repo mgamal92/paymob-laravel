@@ -1,12 +1,16 @@
 <?php
 namespace MG\Paymob;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
+use MG\PayMob\Facades\Paymob;
 
 class PaymobServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+
         $this->publishes([
             // config file.
             __DIR__.'/config/paymob.php' => config_path('paymob.php'),
@@ -14,6 +18,9 @@ class PaymobServiceProvider extends ServiceProvider
     }
     public function register()
     {
-        # code...
+        // PayMob Facede.
+        $this->app->singleton('paymob', function () {
+            return new Paymob;
+        });
     }
 }
