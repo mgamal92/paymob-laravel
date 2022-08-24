@@ -7,7 +7,10 @@ class PaymobServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        # code...
+        $this->publishes([
+            // config file.
+            __DIR__.'/config/paymob.php' => config_path('paymob.php'),
+        ]);
     }
     public function register()
     {
