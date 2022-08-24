@@ -19,20 +19,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Messenger Pusher Keys
+    | Paymob Credentials
     |--------------------------------------------------------------------------
     |
-    | This option defines pusher keys.
+    | Username and Password
     |
     */
-
-    'pusher' => [
-        'app_id'     => env('PUSHER_APP_ID'),
-        'app_key'    => env('PUSHER_APP_KEY'),
-        'app_secret' => env('PUSHER_APP_SECRET'),
-        'options' => [
-            'cluster'   => env('PUSHER_CLUSTER'),
-            'encrypted' => true
-        ]
+    'auth' => [
+        'username'    => env('PAYMOB_USERNAME'),
+        'password'    => env('PAYMOB_PASSWORD'),
     ],
 ];
