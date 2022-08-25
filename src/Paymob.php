@@ -18,7 +18,7 @@ class Paymob
     {
         // Request body
         $json = [
-            'api_key' => config('paymob.auth.api_token'),
+            'api_key' => config('paymob.auth.api_key'),
         ];
 
         // Send curl
@@ -27,21 +27,33 @@ class Paymob
             $json
         );
 
-        return $response->json();
+        dd ($response->json());
     }
 
     /**
      * Send order to paymob servers
      *
      * @param string $token
-     * @param int $merchant_id
-     * @param int $amount_cents
-     * @param int $merchant_order_id
+     * @param bool $deliveryNeeded
+     * @param int $amountCents
+     * @param array $items
      * @return array
      */
-    public function makeOrder(): array
+    public function makeOrder(string $token, bool $deliveryNeeded, int $amountCents, array $items): array
     {
-        return [];
+        $json = [
+            'auth_token' => $token,
+            'delivery_needed' => $deliveryNeeded,
+            'amount_cents' => $amountCents,
+            'items' => $items,
+        ];
+
+        $response = Http::post(
+            self::URL.'/ecommerce/orders',
+            $json
+        );
+
+        return $response->json();
     }
 
     /**
