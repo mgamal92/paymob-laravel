@@ -60,40 +60,47 @@ class Paymob
      * Get Payment key to load iframe on paymob servers
      *
      * @param string $token
-     * @param int $amount_cents
-     * @param int $order_id
-     * @param string $email
-     * @param string $fname
-     * @param string $lname
-     * @param int $phone
-     * @param string $city
-     * @param string $country
+     * @param int $amountCents
+     * @param int $expiration
+     * @param int $orderId
+     * @param array $billingData
+     * @param string $currency
+     * @param int $integrationId
      * @return array
      */
-    public function getPaymentKey(): array
+    public function getPaymentKey(string $token, int $amountCents, int $expiration, int $orderId, array $billingData, string $currency, int $integrationId): array
     {
-        return [];
+        $json = [
+            'auth_token' => $token,
+            'amount_cents' => $amountCents,
+            'expiration' => $expiration,
+            'order_id' => $orderId,
+            'billing_data' => $billingData,
+            'currency' => $currency,
+            'integration_id' => $integrationId
+        ];
+
+        $response = Http::post(
+            self::URL.'/acceptance/payment_keys',
+            $json
+        );
+
+        dd($response->json());
     }
 
     /**
      * Make payment for API (moblie clients).
      *
-     * @param string $token
-     * @param int $card_number
-     * @param string $card_holdername
-     * @param int $card_expiry_mm
-     * @param int $card_expiry_yy
-     * @param int $card_cvn
-     * @param int $order_id
-     * @param string $firstname
-     * @param string $lastname
-     * @param string $email
-     * @param string $phone
-     * @return array
+     * @param string $paymentToken
+     * @return string
      */
-    public function makePayment(): array
+    public function makePayment(string $paymentToken): string
     {
-        return [];
+        $response = Http::get(
+            'https://accept.paymobsolutions.com/api/acceptance/iframes/455520?payment_token='.$paymentToken,
+        );
+
+        return $response->body();
     }
 
     /**
