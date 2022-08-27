@@ -1,38 +1,46 @@
 {
-    "name": "mgamal/paymob-laravel",
-    "description": "Paymob API with Laravel",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "MG\\Paymob\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "Mohamed Gamal",
-            "email": "mg.dev1992@gmail.com"
-        }
-    ],
-    "require": {
-        "php": "^7.2.5|^8.0",
-        "guzzlehttp/guzzle": "^7.4",
-        "laravel/framework": ">=6.20"
-    },
-    "require-dev": {
-        "orchestra/testbench": "^4.8"
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "MG\\Paymob\\PaymobServiceProvider"
-            ]
-        }
-    },
-    "config": {
-        "sort-packages": true,
-        "allow-plugins": {},
-        "platform": {
-            "php": "7.2.5"
-        }
+  "name": "mgamal/paymob-laravel",
+  "description": "Paymob API with Laravel",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mohamed Gamal",
+      "email": "mg.dev1992@gmail.com"
     }
+  ],
+  "scripts": {
+    "test": "./vendor/bin/phpunit --testdox"
+  },
+  "autoload": {
+    "psr-4": {
+      "MG\\Paymob\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "require": {
+    "php": "^7.2.5|^8.0",
+    "guzzlehttp/guzzle": "^7.4",
+    "laravel/framework": ">=6.20"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^4.8"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "MG\\Paymob\\PaymobServiceProvider"
+      ]
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {},
+    "platform": {
+      "php": "7.2.5"
+    }
+  }
 }
