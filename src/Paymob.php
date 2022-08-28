@@ -27,7 +27,7 @@ class Paymob
             $json
         );
 
-        dd ($response->json());
+        return $response->json();
     }
 
     /**
@@ -85,7 +85,7 @@ class Paymob
             $json
         );
 
-        dd($response->json());
+         return $response->json();
     }
 
     /**
