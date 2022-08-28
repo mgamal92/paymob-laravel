@@ -65,11 +65,12 @@ class Paymob
      * @param int $orderId
      * @param array $billingData
      * @param string $currency
-     * @param int $integrationId
      * @return array
      */
-    public function getPaymentKey(string $token, int $amountCents, int $expiration, int $orderId, array $billingData, string $currency, int $integrationId): array
+    public function getPaymentKey(string $token, int $amountCents, int $expiration, int $orderId, array $billingData, string $currency): array
     {
+        $integrationId = config('paymob.auth.integration_id');
+        
         $json = [
             'auth_token' => $token,
             'amount_cents' => $amountCents,
@@ -96,8 +97,9 @@ class Paymob
      */
     public function makePayment(string $paymentToken): string
     {
+        $iframeId = config('paymob.auth.iframe_id');
         $response = Http::get(
-            'https://accept.paymobsolutions.com/api/acceptance/iframes/455520?payment_token='.$paymentToken,
+            'https://accept.paymobsolutions.com/api/acceptance/iframes/'. $iframeId .'?payment_token='.$paymentToken,
         );
 
         return $response->body();
