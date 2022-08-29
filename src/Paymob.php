@@ -91,18 +91,39 @@ class Paymob
 
     /**
      * Make payment for API (moblie clients).
-     *
+     * Return iframe_url
+     * 
      * @param string $paymentToken
      * @return string
      */
-    public function makePayment(string $paymentToken): string
+    public function makePayment(array $data): string
     {
-        $iframeId = config('paymob.auth.iframe_id');
-        $response = Http::get(
-            'https://accept.paymobsolutions.com/api/acceptance/iframes/'. $iframeId .'?payment_token='.$paymentToken,
-        );
+        // step 1 -> Authentication
+        $authResponse = $this->auth();
+        $authToken = $authResponse['token'];
 
-        return $response->body();
+        // step 2 -> Order Registration
+        $deliveryNeeded = (isset($data['delivery_needed']) && $data['delivery_needed'])  ? $data['delivery_needed'] : false;
+        $amountCents = (isset($data['amount_cents']) && $data['amount_cents'])  ? $data['amount_cents'] : 0;
+        $items = (isset($data['items']) && $data['items'])  ? $data['items'] : [];
+        
+        $orderResponse = $this->makeOrder($authToken, $deliveryNeeded, $amountCents, $items);
+
+        // step 3 => Get Payment Key
+        $expiration = (isset($data['expiration']) && $data['expiration'])  ? $data['expiration'] : 3600;
+        $merchantOrderId = (isset($data['merchant_order_id']) && $data['merchant_order_id'])  ? $data['merchant_order_id'] : null;
+        $billingData = (isset($data['billing_data']) && $data['billing_data'])  ? $data['billing_data'] : [];
+        $currency = (isset($data['currency']) && $data['currency'])  ? $data['currency'] : 'EGP';
+        $orderId = $orderResponse['id'];
+
+        $paymentKeyResponse = $this->getPaymentKey($authToken, $amountCents, $expiration, $orderId, $billingData, $currency);
+
+        // create iframe url
+        $iframeId = config('paymob.auth.iframe_id');
+        $paymentToken = $paymentKeyResponse['token'];
+        $iframeUrl = 'https://accept.paymobsolutions.com/api/acceptance/iframes/'. $iframeId .'?payment_token='.$paymentToken;
+
+        return $iframeUrl;
     }
 
     /**
