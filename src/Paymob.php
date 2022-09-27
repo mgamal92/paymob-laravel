@@ -8,7 +8,59 @@ use Illuminate\Support\Facades\Http;
 class Paymob
 {
     const URL = 'https://accept.paymob.com/api';
+    
+    /**
+     * The Integration ID
+     *
+     * @var String
+     */
+    protected $integrationId;
+    
+    /**
+     * The Iframe ID
+     *
+     * @var String
+     */
+    protected $iframeId;
+    
+    /**
+     * Constructor
+     *
+     * @param string|null $integrationId
+     * @param string|null $iframeId
+     */
+    public function __construct(string $integrationId = null, string $iframeId = null)
+    {
+        $this->integrationId = $integrationId ?: config('paymob.auth.integration_id');
+        $this->iframeId = $iframeId ?: config('paymob.auth.iframe_id');
+    }
 
+    /**
+     * Set The Integration ID
+     *
+     * @param string $integrationId
+     * @return self
+     */
+    public function setIntegrationId(string $integrationId): self
+    {
+        $this->integrationId = $integrationId;
+        
+        return $this;
+    }
+    
+    /**
+     * Set The Iframe ID
+     *
+     * @param string $iframeId
+     * @return self
+     */
+    public function setIframeId(string $iframeId): self
+    {
+        $this->iframeId = $iframeId;
+        
+        return $this;
+    }
+    
     /**
      * Paymob Authentication
      *
@@ -68,9 +120,7 @@ class Paymob
      * @return array
      */
     public function getPaymentKey(string $token, int $amountCents, int $expiration, int $orderId, array $billingData, string $currency): array
-    {
-        $integrationId = config('paymob.auth.integration_id');
-        
+    {        
         $json = [
             'auth_token' => $token,
             'amount_cents' => $amountCents,
@@ -78,7 +128,7 @@ class Paymob
             'order_id' => $orderId,
             'billing_data' => $billingData,
             'currency' => $currency,
-            'integration_id' => $integrationId
+            'integration_id' => $this->integrationId
         ];
 
         $response = Http::post(
@@ -235,8 +285,7 @@ class Paymob
      */
     private function buildIframeUrl(string $paymentToken): string
     {
-        $iframeId = config('paymob.auth.iframe_id');
-        $iframeUrl = 'https://accept.paymobsolutions.com/api/acceptance/iframes/'. $iframeId .'?payment_token='.$paymentToken;
+        $iframeUrl = 'https://accept.paymobsolutions.com/api/acceptance/iframes/'. $this->iframeId .'?payment_token='.$paymentToken;
         return $iframeUrl;
     }
 }
