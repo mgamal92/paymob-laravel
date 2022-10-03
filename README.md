@@ -7,7 +7,7 @@ This is an integration between Laravel framework and Paymob API to make it easie
 You can install the package via composer:
 
 ```bash
-composer require mgamal/laravel-paymob
+composer require mgamal/paymob-laravel
 ```
 
 Optionally, you can publish the config file with:
