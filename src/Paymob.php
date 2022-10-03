@@ -39,13 +39,14 @@ class Paymob
      * @param array $items
      * @return array
      */
-    public function makeOrder(string $token, bool $deliveryNeeded, int $amountCents, array $items): array
+    public function makeOrder(string $token, bool $deliveryNeeded, int $amountCents, array $items, string $merchantOrderId): array
     {
         $json = [
             'auth_token' => $token,
             'delivery_needed' => $deliveryNeeded,
             'amount_cents' => $amountCents,
             'items' => $items,
+            'merchant_order_id' => $merchantOrderId,
         ];
 
         $response = Http::post(
@@ -196,11 +197,12 @@ class Paymob
      */
     private function registerOrder(string $authToken, array $data): string
     {
-        $deliveryNeeded = (isset($data['delivery_needed']) && $data['delivery_needed'])  ? $data['delivery_needed'] : false;
-        $amountCents = (isset($data['amount_cents']) && $data['amount_cents'])  ? $data['amount_cents'] : 0;
-        $items = (isset($data['items']) && $data['items'])  ? $data['items'] : [];
-        
-        $orderResponse = $this->makeOrder($authToken, $deliveryNeeded, $amountCents, $items);
+        $deliveryNeeded = $data['delivery_needed'] ?? false;
+        $amountCents = $data['amount_cents'] ?? 0;
+        $items = $data['items'] ?? [];
+        $merchantOrderId = $data['merchant_order_id'] ?? null;
+
+        $orderResponse = $this->makeOrder($authToken, $deliveryNeeded, $amountCents, $items, $merchantOrderId);
         return $orderResponse['id'];
     }
     

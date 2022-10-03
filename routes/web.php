@@ -15,3 +15,10 @@ use MG\Paymob\Controllers\PaymobController;
 */
 
 Route::get('paymob-test', [PaymobController::class, 'test']);
+
+Route::get('test', function(){
+    $rows = Spatie\SimpleExcel\SimpleExcelReader::create('../addresses.csv')->getRows();
+    dump($rows->isEmpty());
+    dump($rows->count());
+    dump($rows->isEmpty());
+});
