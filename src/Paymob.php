@@ -1,6 +1,6 @@
 <?php
 
-namespace MG\PayMob;
+namespace MG\Paymob;
 
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;

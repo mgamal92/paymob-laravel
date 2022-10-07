@@ -3,7 +3,7 @@ namespace MG\Paymob;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
-use MG\PayMob\Facades\Paymob;
+use MG\Paymob\Facades\Paymob;
 
 class PaymobServiceProvider extends ServiceProvider
 {

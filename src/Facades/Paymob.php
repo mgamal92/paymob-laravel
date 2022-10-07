@@ -1,6 +1,6 @@
 <?php
 
-namespace MG\PayMob\Facades;
+namespace MG\Paymob\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
