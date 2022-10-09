@@ -13,5 +13,5 @@ composer require mgamal/paymob-laravel
 Optionally, you can publish the config file with:
 
 ```bash
-Zphp artisan vendor:publish --tag=config --provider="MG\Paymob\PaymobServiceProvider"
+php artisan vendor:publish --tag=config --provider="MG\Paymob\PaymobServiceProvider"
 ```
