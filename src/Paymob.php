@@ -8,21 +8,21 @@ use Illuminate\Support\Facades\Http;
 class Paymob
 {
     const URL = 'https://accept.paymob.com/api';
-    
+
     /**
      * The Integration ID
      *
      * @var String
      */
     protected $integrationId;
-    
+
     /**
      * The Iframe ID
      *
      * @var String
      */
     protected $iframeId;
-    
+
     /**
      * Constructor
      *
@@ -44,10 +44,10 @@ class Paymob
     public function setIntegrationId(string $integrationId): self
     {
         $this->integrationId = $integrationId;
-        
+
         return $this;
     }
-    
+
     /**
      * Set The Iframe ID
      *
@@ -57,10 +57,10 @@ class Paymob
     public function setIframeId(string $iframeId): self
     {
         $this->iframeId = $iframeId;
-        
+
         return $this;
     }
-    
+
     /**
      * Paymob Authentication
      *
@@ -121,7 +121,7 @@ class Paymob
      * @return array
      */
     public function getPaymentKey(string $token, int $amountCents, int $expiration, int $orderId, array $billingData, string $currency): array
-    {        
+    {
         $json = [
             'auth_token' => $token,
             'amount_cents' => $amountCents,
@@ -137,17 +137,17 @@ class Paymob
             $json
         );
 
-         return $response->json();
+        return $response->json();
     }
 
     /**
      * Make payment for API (moblie clients).
      * Return iframe_url
-     * 
+     *
      * @param string $paymentToken
      * @return string
      */
-    public function makePayment(array $data): string
+    public function makePayment(array $data, $mobileWallet = null): string
     {
         // step 1 -> Authentication
         $authToken = $this->autheticate();
@@ -158,10 +158,14 @@ class Paymob
         // step 3 => Get Payment Key
         $paymentToken = $this->createPaymentToken($authToken, $orderId, $data);
 
-        // step 4 => build iframe url
-        $iframeUrl = $this->buildIframeUrl($paymentToken);
+        if ($mobileWallet) {
+            $walletResponse = $this->prepareWalletRedirectionUrl($paymentToken, $mobileWallet);
 
-        return $iframeUrl;
+            return $walletResponse['redirect_url'];
+        }
+
+        // step 4 => build iframe url
+        return $this->buildIframeUrl($paymentToken);
     }
 
     /**
@@ -240,7 +244,7 @@ class Paymob
     /**
      * register order request
      * return orderId
-     * 
+     *
      * @param string $authToken
      * @param array $data
      * @return string
@@ -255,11 +259,11 @@ class Paymob
         $orderResponse = $this->makeOrder($authToken, $deliveryNeeded, $amountCents, $items, $merchantOrderId);
         return $orderResponse['id'];
     }
-    
+
     /**
      * create payment token request
      * return paymentToken
-     * 
+     *
      * @param string $authToken
      * @param string $orderId
      * @param array $data
@@ -274,6 +278,7 @@ class Paymob
         $currency = (isset($data['currency']) && $data['currency'])  ? $data['currency'] : 'EGP';
 
         $paymentKeyResponse = $this->getPaymentKey($authToken, $amountCents, $expiration, $orderId, $billingData, $currency);
+
         return $paymentKeyResponse['token'];
     }
 
@@ -281,7 +286,7 @@ class Paymob
     /**
      * build iframe url using payment token and iframe id
      * return iframeUrl
-     * 
+     *
      * @param string $paymentToken
      * @return string
      */
@@ -289,5 +294,32 @@ class Paymob
     {
         $iframeUrl = 'https://accept.paymobsolutions.com/api/acceptance/iframes/'. $this->iframeId .'?payment_token='.$paymentToken;
         return $iframeUrl;
+    }
+
+    /**
+     * Send order to paymob servers
+     *
+     * @param string $token
+     * @param bool $deliveryNeeded
+     * @param int $amountCents
+     * @param array $items
+     * @return array
+     */
+    public function prepareWalletRedirectionUrl(string $paymentToken, string $mobileWallet = null)
+    {
+        $json = [
+            'payment_token' => $paymentToken,
+            'source' => [
+                'subtype' => 'WALLET',
+                'identifier' => $mobileWallet,
+            ],
+        ];
+
+        $response = Http::post(
+            self::URL.'/acceptance/payments/pay',
+            $json
+        );
+
+        return $response->json();
     }
 }
