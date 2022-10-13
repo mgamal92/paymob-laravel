@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use MG\Paymob\Controllers\PaymobController;
-use MG\Paymob\Controllers\TransactionCallbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,5 +14,5 @@ use MG\Paymob\Controllers\TransactionCallbackController;
 |
 */
 
-Route::post('transaction/callback/processed', [config('paymob.controller', TransactionCallbackController::class), 'processed']);
-Route::get('transaction/callback/response', [config('paymob.controller', TransactionCallbackController::class), 'response']);
+Route::post('transaction/callback/processed', [config('paymob.controller'), 'processed']);
+Route::get('transaction/callback/response', [config('paymob.controller'), 'response']);
