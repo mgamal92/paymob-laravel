@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use MG\Paymob\Controllers\TransactionCallbackController;
 
 return [
 
@@ -12,6 +13,8 @@ return [
     | This option defines the default User model.
     |
     */
+
+    'controller' => TransactionCallbackController::class,
 
     'user' => [
         'model' => User::class
