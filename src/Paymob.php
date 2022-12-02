@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Http;
 
 class Paymob
 {
-    const URL = 'https://accept.paymob.com/api';
-
     /**
      * The Integration ID
      *
@@ -75,7 +73,7 @@ class Paymob
 
         // Send curl
         $response =  Http::post(
-            self::URL.'/auth/tokens',
+            config('paymob.base_url').'/auth/tokens',
             $json
         );
 
@@ -102,7 +100,7 @@ class Paymob
         ];
 
         $response = Http::post(
-            self::URL.'/ecommerce/orders',
+            config('paymob.base_url').'/ecommerce/orders',
             $json
         );
 
@@ -133,7 +131,7 @@ class Paymob
         ];
 
         $response = Http::post(
-            self::URL.'/acceptance/payment_keys',
+            config('paymob.base_url').'/acceptance/payment_keys',
             $json
         );
 
@@ -316,7 +314,7 @@ class Paymob
         ];
 
         $response = Http::post(
-            self::URL.'/acceptance/payments/pay',
+            config('paymob.base_url').'/acceptance/payments/pay',
             $json
         );
 
