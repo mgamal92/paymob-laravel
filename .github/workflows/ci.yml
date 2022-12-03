@@ -7,40 +7,6 @@ on:
   push:
 
 jobs:
-  static-analysis-psalm:
-    name: "Static Analysis by Psalm"
-
-    runs-on: ${{ matrix.operating-system }}
-
-    strategy:
-      matrix:
-        dependencies:
-          - "locked"
-        php-version:
-          - "8.1"
-        operating-system:
-          - "ubuntu-latest"
-
-    steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v3"
-
-      - name: "Install PHP"
-        uses: "shivammathur/setup-php@v2"
-        with:
-          coverage: "none"
-          php-version: "${{ matrix.php-version }}"
-          ini-values: memory_limit=-1
-          extensions: sodium, fileinfo
-
-      - name: "Install dependencies"
-        uses: "ramsey/composer-install@v2"
-        with:
-          dependency-versions: "${{ matrix.dependencies }}"
-
-      - name: "psalm"
-        run: "composer psalm"
-
   coding-standards:
     name: "Check Coding Standards"
 

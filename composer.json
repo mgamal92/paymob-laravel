@@ -10,8 +10,7 @@
   ],
   "scripts": {
     "test": "./vendor/bin/phpunit --testdox",
-    "check-style": "vendor/bin/php-cs-fixer fix src/ --dry-run --allow-risky=yes --format=txt --verbose",
-    "psalm": "vendor/bin/psalm --show-info=true --no-cache --shepherd --stats"
+    "check-style": "vendor/bin/php-cs-fixer fix src/ --dry-run --allow-risky=yes --format=txt --verbose"
   },
   "autoload": {
     "psr-4": {
@@ -30,9 +29,7 @@
     "laravel/framework": ">=6.20"
   },
   "require-dev": {
-    "orchestra/testbench": "^4.8",
-    "psalm/plugin-laravel": "*",
-    "vimeo/psalm": "^4.30"
+    "orchestra/testbench": "^4.8"
   },
   "extra": {
     "laravel": {
