@@ -16,7 +16,6 @@ return [
 
     'base_url' => 'https://accept.paymob.com/api',
 
-
     'controller' => TransactionCallbackController::class,
 
     'user' => [
