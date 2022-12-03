@@ -29,7 +29,8 @@
     "laravel/framework": ">=6.20"
   },
   "require-dev": {
-    "orchestra/testbench": "^4.8"
+    "orchestra/testbench": "^4.8",
+    "vimeo/psalm": "^4.30"
   },
   "extra": {
     "laravel": {
