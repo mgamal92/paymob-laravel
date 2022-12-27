@@ -1,5 +1,5 @@
 /vendor
 /.idea
 .phpunit.result.cache
-/.DS_Store
-src/.DS_Store
+.DS_Store
+*/.DS_Store
