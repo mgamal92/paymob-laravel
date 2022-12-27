@@ -16,14 +16,14 @@ class Paymob
      *
      * @var string
      */
-    protected $integrationId;
+    protected mixed $integrationId;
 
     /**
      * The Iframe ID.
      *
      * @var string
      */
-    protected $iframeId;
+    protected mixed $iframeId;
 
     /**
      * Constructor.
@@ -32,26 +32,6 @@ class Paymob
     {
         $this->integrationId = $integrationId ?: config('paymob.auth.integration_id');
         $this->iframeId = $iframeId ?: config('paymob.auth.iframe_id');
-    }
-
-    /**
-     * Set The Integration ID.
-     */
-    public function setIntegrationId(string $integrationId): self
-    {
-        $this->integrationId = $integrationId;
-
-        return $this;
-    }
-
-    /**
-     * Set The Iframe ID.
-     */
-    public function setIframeId(string $iframeId): self
-    {
-        $this->iframeId = $iframeId;
-
-        return $this;
     }
 
     /**
@@ -118,15 +98,17 @@ class Paymob
     }
 
     /**
-     * Make payment for API (moblie clients).
+     * Make payment for API (mobile clients).
      * Return iframe_url.
      *
-     * @param string $paymentToken
+     * @param array $data
+     * @param null $mobileWallet
+     * @return string
      */
     public function makePayment(array $data, $mobileWallet = null): string
     {
         // step 1 -> Authentication
-        $authToken = $this->autheticate();
+        $authToken = $this->authenticate();
 
         // step 2 -> Order Registration
         $orderId = $this->registerOrder($authToken, $data);
@@ -134,6 +116,7 @@ class Paymob
         // step 3 => Get Payment Key
         $paymentToken = $this->createPaymentToken($authToken, $orderId, $data);
 
+        //@TODO: should be refactored!
         if ($mobileWallet) {
             $walletResponse = $this->prepareWalletRedirectionUrl($paymentToken, $mobileWallet);
 
@@ -145,74 +128,20 @@ class Paymob
     }
 
     /**
-     * Capture authed order.
-     *
-     * @param string $token
-     * @param int    $transactionId
-     * @param int  amount
-     */
-    public function capture($token, $transactionId, $amount): array
-    {
-        return [];
-    }
-
-    /**
-     * Get paymob all orders.
-     *
-     * @param string $authToken
-     * @param string $page
-     */
-    public function getOrders($authToken, $page = 1): Response
-    {
-    }
-
-    /**
-     * Get paymob order.
-     *
-     * @param string $authToken
-     * @param int    $orderId
-     */
-    public function getOrder($authToken, $orderId): Response
-    {
-    }
-
-    /**
-     * Get Paymob all transactions.
-     *
-     * @param string $authToken
-     * @param string $page
-     */
-    public function getTransactions($authToken, $page = 1): Response
-    {
-    }
-
-    /**
-     * Get Paymob transaction.
-     *
-     * @param string $authToken
-     * @param int    $transactionId
-     */
-    public function getTransaction($authToken, $transactionId): Response
-    {
-    }
-
-    /**
      * authenticate request
      * return authToken.
      */
-    private function autheticate(): string
+    private function authenticate(): string
     {
         $authResponse = $this->auth();
-        $authToken = $authResponse['token'];
-
-        return $authToken;
+        return $authResponse['token'];
     }
 
     /**
      * register order request
      * return orderId.
      */
-    private function registerOrder(string $authToken, array $data): string
+    private function registerOrder(string $authToken, array $data): int
     {
         $deliveryNeeded = $data['delivery_needed'] ?? false;
         $amountCents = $data['amount_cents'] ?? 0;
@@ -228,11 +157,10 @@ class Paymob
      * create payment token request
      * return paymentToken.
      */
-    private function createPaymentToken(string $authToken, string $orderId, array $data): string
+    private function createPaymentToken(string $authToken, int $orderId, array $data): string
     {
         $amountCents = (isset($data['amount_cents']) && $data['amount_cents']) ? $data['amount_cents'] : 0;
         $expiration = (isset($data['expiration']) && $data['expiration']) ? $data['expiration'] : 3600;
-        $merchantOrderId = (isset($data['merchant_order_id']) && $data['merchant_order_id']) ? $data['merchant_order_id'] : null;
         $billingData = (isset($data['billing_data']) && $data['billing_data']) ? $data['billing_data'] : [];
         $currency = (isset($data['currency']) && $data['currency']) ? $data['currency'] : 'EGP';
 
@@ -255,14 +183,11 @@ class Paymob
     /**
      * Send order to paymob servers.
      *
-     * @param string $token
-     * @param bool   $deliveryNeeded
-     * @param int    $amountCents
-     * @param array  $items
-     *
+     * @param string $paymentToken
+     * @param string|null $mobileWallet
      * @return array
      */
-    public function prepareWalletRedirectionUrl(string $paymentToken, string $mobileWallet = null)
+    public function prepareWalletRedirectionUrl(string $paymentToken, string $mobileWallet = null): array
     {
         $json = [
             'payment_token' => $paymentToken,
