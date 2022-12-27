@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 use App\Models\User;
 use MG\Paymob\Controllers\TransactionCallbackController;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Messenger Default User Model
@@ -19,7 +20,7 @@ return [
     'controller' => TransactionCallbackController::class,
 
     'user' => [
-        'model' => User::class
+        'model' => User::class,
     ],
 
     /*
@@ -31,9 +32,9 @@ return [
     |
     */
     'auth' => [
-        'api_key'    => env('PAYMOB_API_KEY'),
+        'api_key' => env('PAYMOB_API_KEY'),
         'integration_id' => env('PAYMOB_INTEGRATION_ID'),
         'iframe_id' => env('PAYMOB_IFRAME_ID'),
-        'hmac_secret' => env('PAYMOB_HMAC_SECRET')
+        'hmac_secret' => env('PAYMOB_HMAC_SECRET'),
     ],
 ];

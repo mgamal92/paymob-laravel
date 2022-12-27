@@ -9,7 +9,8 @@
     }
   ],
   "scripts": {
-    "test": "./vendor/bin/phpunit --testdox"
+    "test": "./vendor/bin/phpunit --testdox",
+    "check-style": "vendor/bin/php-cs-fixer fix src/ --dry-run --allow-risky=yes --format=txt --verbose"
   },
   "autoload": {
     "psr-4": {
@@ -22,11 +23,13 @@
     }
   },
   "require": {
-    "php": "^7.2.5|^8.0",
+    "php": "^8.1",
+    "friendsofphp/php-cs-fixer": "^3.4",
     "guzzlehttp/guzzle": "^7.4",
     "laravel/framework": ">=6.20"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-latest",
     "orchestra/testbench": "^4.8"
   },
   "extra": {
@@ -38,9 +41,6 @@
   },
   "config": {
     "sort-packages": true,
-    "allow-plugins": {},
-    "platform": {
-      "php": "7.2.5"
-    }
+    "allow-plugins": {}
   }
 }

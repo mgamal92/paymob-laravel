@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MG\Paymob;
 
 use Illuminate\Http\Response;
@@ -7,25 +9,23 @@ use Illuminate\Support\Facades\Http;
 
 class Paymob
 {
+    public const URL = 'https://accept.paymob.com/api';
     /**
-     * The Integration ID
+     * The Integration ID.
      *
-     * @var String
+     * @var string
      */
     protected $integrationId;
 
     /**
-     * The Iframe ID
+     * The Iframe ID.
      *
-     * @var String
+     * @var string
      */
     protected $iframeId;
 
     /**
-     * Constructor
-     *
-     * @param string|null $integrationId
-     * @param string|null $iframeId
+     * Constructor.
      */
     public function __construct(string $integrationId = null, string $iframeId = null)
     {
@@ -34,10 +34,7 @@ class Paymob
     }
 
     /**
-     * Set The Integration ID
-     *
-     * @param string $integrationId
-     * @return self
+     * Set The Integration ID.
      */
     public function setIntegrationId(string $integrationId): self
     {
@@ -47,10 +44,7 @@ class Paymob
     }
 
     /**
-     * Set The Iframe ID
-     *
-     * @param string $iframeId
-     * @return self
+     * Set The Iframe ID.
      */
     public function setIframeId(string $iframeId): self
     {
@@ -60,9 +54,7 @@ class Paymob
     }
 
     /**
-     * Paymob Authentication
-     *
-     * @return array
+     * Paymob Authentication.
      */
     public function auth(): array
     {
@@ -81,13 +73,7 @@ class Paymob
     }
 
     /**
-     * Send order to paymob servers
-     *
-     * @param string $token
-     * @param bool $deliveryNeeded
-     * @param int $amountCents
-     * @param array $items
-     * @return array
+     * Send order to paymob servers.
      */
     public function makeOrder(string $token, bool $deliveryNeeded, int $amountCents, array $items, string $merchantOrderId): array
     {
@@ -108,15 +94,7 @@ class Paymob
     }
 
     /**
-     * Get Payment key to load iframe on paymob servers
-     *
-     * @param string $token
-     * @param int $amountCents
-     * @param int $expiration
-     * @param int $orderId
-     * @param array $billingData
-     * @param string $currency
-     * @return array
+     * Get Payment key to load iframe on paymob servers.
      */
     public function getPaymentKey(string $token, int $amountCents, int $expiration, int $orderId, array $billingData, string $currency): array
     {
@@ -127,7 +105,7 @@ class Paymob
             'order_id' => $orderId,
             'billing_data' => $billingData,
             'currency' => $currency,
-            'integration_id' => $this->integrationId
+            'integration_id' => $this->integrationId,
         ];
 
         $response = Http::post(
@@ -140,10 +118,9 @@ class Paymob
 
     /**
      * Make payment for API (moblie clients).
-     * Return iframe_url
+     * Return iframe_url.
      *
      * @param string $paymentToken
-     * @return string
      */
     public function makePayment(array $data, $mobileWallet = null): string
     {
@@ -170,9 +147,8 @@ class Paymob
      * Capture authed order.
      *
      * @param string $token
-     * @param int $transactionId
+     * @param int    $transactionId
      * @param int  amount
-     * @return array
      */
     public function capture($token, $transactionId, $amount): array
     {
@@ -184,7 +160,6 @@ class Paymob
      *
      * @param string $authToken
      * @param string $page
-     * @return Response
      */
     public function getOrders($authToken, $page = 1): Response
     {
@@ -193,59 +168,48 @@ class Paymob
     /**
      * Get paymob order.
      *
-     * @param  string  $authToken
-     * @param  int  $orderId
-     * @return Response
+     * @param string $authToken
+     * @param int    $orderId
      */
     public function getOrder($authToken, $orderId): Response
     {
-
     }
 
     /**
      * Get Paymob all transactions.
      *
-     * @param  string  $authToken
-     * @param  string  $page
-     * @return Response
+     * @param string $authToken
+     * @param string $page
      */
     public function getTransactions($authToken, $page = 1): Response
     {
-
     }
 
     /**
      * Get Paymob transaction.
      *
-     * @param  string  $authToken
-     * @param  int  $transactionId
-     * @return Response
+     * @param string $authToken
+     * @param int    $transactionId
      */
     public function getTransaction($authToken, $transactionId): Response
     {
-
     }
 
     /**
      * authenticate request
-     * return authToken
-     *
-     * @return string
+     * return authToken.
      */
     private function autheticate(): string
     {
         $authResponse = $this->auth();
         $authToken = $authResponse['token'];
+
         return $authToken;
     }
 
     /**
      * register order request
-     * return orderId
-     *
-     * @param string $authToken
-     * @param array $data
-     * @return string
+     * return orderId.
      */
     private function registerOrder(string $authToken, array $data): string
     {
@@ -255,52 +219,46 @@ class Paymob
         $merchantOrderId = $data['merchant_order_id'] ?? null;
 
         $orderResponse = $this->makeOrder($authToken, $deliveryNeeded, $amountCents, $items, $merchantOrderId);
+
         return $orderResponse['id'];
     }
 
     /**
      * create payment token request
-     * return paymentToken
-     *
-     * @param string $authToken
-     * @param string $orderId
-     * @param array $data
-     * @return string
+     * return paymentToken.
      */
     private function createPaymentToken(string $authToken, string $orderId, array $data): string
     {
-        $amountCents = (isset($data['amount_cents']) && $data['amount_cents'])  ? $data['amount_cents'] : 0;
-        $expiration = (isset($data['expiration']) && $data['expiration'])  ? $data['expiration'] : 3600;
-        $merchantOrderId = (isset($data['merchant_order_id']) && $data['merchant_order_id'])  ? $data['merchant_order_id'] : null;
-        $billingData = (isset($data['billing_data']) && $data['billing_data'])  ? $data['billing_data'] : [];
-        $currency = (isset($data['currency']) && $data['currency'])  ? $data['currency'] : 'EGP';
+        $amountCents = (isset($data['amount_cents']) && $data['amount_cents']) ? $data['amount_cents'] : 0;
+        $expiration = (isset($data['expiration']) && $data['expiration']) ? $data['expiration'] : 3600;
+        $merchantOrderId = (isset($data['merchant_order_id']) && $data['merchant_order_id']) ? $data['merchant_order_id'] : null;
+        $billingData = (isset($data['billing_data']) && $data['billing_data']) ? $data['billing_data'] : [];
+        $currency = (isset($data['currency']) && $data['currency']) ? $data['currency'] : 'EGP';
 
         $paymentKeyResponse = $this->getPaymentKey($authToken, $amountCents, $expiration, $orderId, $billingData, $currency);
 
         return $paymentKeyResponse['token'];
     }
 
-
     /**
      * build iframe url using payment token and iframe id
-     * return iframeUrl
-     *
-     * @param string $paymentToken
-     * @return string
+     * return iframeUrl.
      */
     private function buildIframeUrl(string $paymentToken): string
     {
-        $iframeUrl = 'https://accept.paymobsolutions.com/api/acceptance/iframes/'. $this->iframeId .'?payment_token='.$paymentToken;
+        $iframeUrl = 'https://accept.paymobsolutions.com/api/acceptance/iframes/'.$this->iframeId.'?payment_token='.$paymentToken;
+
         return $iframeUrl;
     }
 
     /**
-     * Send order to paymob servers
+     * Send order to paymob servers.
      *
      * @param string $token
-     * @param bool $deliveryNeeded
-     * @param int $amountCents
-     * @param array $items
+     * @param bool   $deliveryNeeded
+     * @param int    $amountCents
+     * @param array  $items
+     *
      * @return array
      */
     public function prepareWalletRedirectionUrl(string $paymentToken, string $mobileWallet = null)
