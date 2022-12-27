@@ -11,9 +11,6 @@ class TransactionCallbackController extends Controller
 {
     /**
      * Handle Transaction Callback Processed.
-     *
-     * @param Request $request
-     * @return void
      */
     public function processed(Request $request): void
     {
@@ -21,9 +18,6 @@ class TransactionCallbackController extends Controller
 
     /**
      * Handle Transaction Callback Response.
-     *
-     * @param Request $request
-     * @return void
      */
     public function response(Request $request): void
     {

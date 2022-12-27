@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace MG\Paymob;
 
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 
 class Paymob
@@ -43,7 +42,6 @@ class Paymob
         $json = [
             'api_key' => config('paymob.auth.api_key'),
         ];
-
         // Send curl
         $response = Http::post(
             self::URL.'/auth/tokens',
@@ -99,11 +97,6 @@ class Paymob
 
     /**
      * Make payment for API (mobile clients).
-     * Return iframe_url.
-     *
-     * @param array $data
-     * @param null $mobileWallet
-     * @return string
      */
     public function makePayment(array $data, $mobileWallet = null): string
     {
@@ -128,18 +121,17 @@ class Paymob
     }
 
     /**
-     * authenticate request
-     * return authToken.
+     * authenticate request.
      */
     private function authenticate(): string
     {
         $authResponse = $this->auth();
+
         return $authResponse['token'];
     }
 
     /**
-     * register order request
-     * return orderId.
+     * register order request.
      */
     private function registerOrder(string $authToken, array $data): int
     {
@@ -154,8 +146,7 @@ class Paymob
     }
 
     /**
-     * create payment token request
-     * return paymentToken.
+     * create payment token request.
      */
     private function createPaymentToken(string $authToken, int $orderId, array $data): string
     {
@@ -170,22 +161,15 @@ class Paymob
     }
 
     /**
-     * build iframe url using payment token and iframe id
-     * return iframeUrl.
+     * build iframe url using payment token and iframe id.
      */
     private function buildIframeUrl(string $paymentToken): string
     {
-        $iframeUrl = 'https://accept.paymobsolutions.com/api/acceptance/iframes/'.$this->iframeId.'?payment_token='.$paymentToken;
-
-        return $iframeUrl;
+        return 'https://accept.paymobsolutions.com/api/acceptance/iframes/'.$this->iframeId.'?payment_token='.$paymentToken;
     }
 
     /**
      * Send order to paymob servers.
-     *
-     * @param string $paymentToken
-     * @param string|null $mobileWallet
-     * @return array
      */
     public function prepareWalletRedirectionUrl(string $paymentToken, string $mobileWallet = null): array
     {
