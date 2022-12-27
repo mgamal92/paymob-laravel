@@ -29,8 +29,9 @@
     "laravel/framework": ">=6.20"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest",
-    "orchestra/testbench": "^7.17"
+    "orchestra/testbench": "^7.17",
+    "phpunit/phpunit": "^9.5",
+    "roave/security-advisories": "dev-latest"
   },
   "extra": {
     "laravel": {
