@@ -109,7 +109,7 @@ class Paymob
         // step 3 => Get Payment Key
         $paymentToken = $this->createPaymentToken($authToken, $orderId, $data);
 
-        //@TODO: should be refactored!
+        // @TODO: should be refactored!
         if ($mobileWallet) {
             $walletResponse = $this->prepareWalletRedirectionUrl($paymentToken, $mobileWallet);
 
