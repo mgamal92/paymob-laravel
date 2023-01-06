@@ -1,6 +1,6 @@
 # Paymob Laravel
 
-This is an integration between Laravel framework and Paymob API to make it easier for developers to use Paymob functionalities on their applications.
+This is an integration between Laravel framework and Paymob API to make it easier for developers to use Paymob functionalities in their applications.
 
 ## Installation
 
