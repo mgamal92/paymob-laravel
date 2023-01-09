@@ -1,5 +1,9 @@
 # Paymob Laravel
 
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/mgamal/paymob-laravel.svg?style=flat-square)](https://packagist.org/packages/mgamal/paymob-laravel)
+[![CI](https://github.com/mgamal92/paymob-laravel/actions/workflows/ci.yml/badge.svg)](https://github.com/mgamal92/paymob-laravel/actions/workflows/ci.yml)
+
+
 This is an integration between Laravel framework and Paymob API to make it easier for developers to use Paymob functionalities in their applications.
 
 ## Installation
