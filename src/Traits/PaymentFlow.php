@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MG\Paymob\Traits;
 
 use Illuminate\Support\Facades\Http;
@@ -68,7 +70,6 @@ trait PaymentFlow
         return $response->json();
     }
 
-
     /**
      * authenticate request.
      */
@@ -118,8 +119,6 @@ trait PaymentFlow
         // step 4 => build iframe url
         return $this->buildIframeUrl($paymentToken);
     }
-
-
 
     /**
      * create payment token request.

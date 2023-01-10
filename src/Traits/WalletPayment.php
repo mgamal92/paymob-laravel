@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MG\Paymob\Traits;
 
 use Illuminate\Support\Facades\Http;
