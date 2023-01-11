@@ -9,7 +9,7 @@
     }
   ],
   "scripts": {
-    "test": "./vendor/bin/phpunit --testdox",
+    "test": "vendor/bin/phpunit",
     "check-style": "vendor/bin/php-cs-fixer fix src/ --dry-run --allow-risky=yes --format=txt --verbose"
   },
   "autoload": {
@@ -29,8 +29,9 @@
     "laravel/framework": ">=6.20"
   },
   "require-dev": {
-    "roave/security-advisories": "dev-latest",
-    "orchestra/testbench": "^4.8"
+    "orchestra/testbench": "^7.17",
+    "phpunit/phpunit": "^9.5",
+    "roave/security-advisories": "dev-latest"
   },
   "extra": {
     "laravel": {
