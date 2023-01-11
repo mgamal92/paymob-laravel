@@ -29,7 +29,7 @@ trait PaymentFlow
     /**
      * Send order to paymob servers.
      */
-    public function makeOrder(string $token, bool $deliveryNeeded, int $amountCents, array $items, string $merchantOrderId): array
+    public function makeOrder(string $token, bool $deliveryNeeded, int $amountCents, array $items, int $merchantOrderId): array
     {
         $json = [
             'auth_token' => $token,
