@@ -29,7 +29,7 @@
     "laravel/framework": ">=6.20"
   },
   "require-dev": {
-    "orchestra/testbench": "^7.17",
+    "orchestra/testbench": "^8.0",
     "phpunit/phpunit": "^9.5",
     "roave/security-advisories": "dev-latest"
   },
