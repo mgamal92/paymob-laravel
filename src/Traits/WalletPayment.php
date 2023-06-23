@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace MG\Paymob\Traits;
 
+use MG\Paymob\Traits\Request;
 use Illuminate\Support\Facades\Http;
 
-trait WalletPayment
+class WalletPayment extends Request
 {
     /**
      * Send order to paymob servers.
@@ -21,11 +22,9 @@ trait WalletPayment
             ],
         ];
 
-        $response = Http::post(
-            config('paymob.base_url').'/acceptance/payments/pay',
+        return  $this->post(
+            '/acceptance/payments/pay',
             $json
         );
-
-        return $response->json();
     }
 }

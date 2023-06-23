@@ -18,12 +18,10 @@ trait PaymentFlow
             'api_key' => config('paymob.auth.api_key'),
         ];
         // Send curl
-        $response = Http::post(
-            config('paymob.base_url').'/auth/tokens',
+        return   $this->post(
+            '/auth/tokens',
             $json
         );
-
-        return $response->json();
     }
 
     /**
@@ -39,12 +37,9 @@ trait PaymentFlow
             'merchant_order_id' => $merchantOrderId,
         ];
 
-        $response = Http::post(
-            config('paymob.base_url').'/ecommerce/orders',
+        return   $this->post(.'/ecommerce/orders',
             $json
         );
-
-        return $response->json();
     }
 
     /**
@@ -62,12 +57,9 @@ trait PaymentFlow
             'integration_id' => config('paymob.auth.integration_id'),
         ];
 
-        $response = Http::post(
-            config('paymob.base_url').'/acceptance/payment_keys',
+        return   $this->post('/acceptance/payment_keys',
             $json
         );
-
-        return $response->json();
     }
 
     /**
