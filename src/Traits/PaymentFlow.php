@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace MG\Paymob\Traits;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
+use RuntimeException;
 
 trait PaymentFlow
 {
@@ -37,7 +39,9 @@ trait PaymentFlow
             'merchant_order_id' => $merchantOrderId,
         ];
 
-        return   $this->post(.'/ecommerce/orders',
+
+        return   $this->post(
+            '/ecommerce/orders',
             $json
         );
     }
@@ -57,7 +61,8 @@ trait PaymentFlow
             'integration_id' => config('paymob.auth.integration_id'),
         ];
 
-        return   $this->post('/acceptance/payment_keys',
+        return   $this->post(
+            '/acceptance/payment_keys',
             $json
         );
     }
@@ -83,6 +88,8 @@ trait PaymentFlow
         $merchantOrderId = $data['merchant_order_id'] ?? null;
 
         $orderResponse = $this->makeOrder($authToken, $deliveryNeeded, $amountCents, $items, $merchantOrderId);
+        
+        $this->checkDuplicated($orderResponse);
 
         return $orderResponse['id'];
     }
@@ -125,5 +132,14 @@ trait PaymentFlow
         $paymentKeyResponse = $this->getPaymentKey($authToken, $amountCents, $expiration, $orderId, $billingData, $currency);
 
         return $paymentKeyResponse['token'];
+    }
+
+
+    private function checkDuplicated($response)
+    {
+        // We may need to create an enum for response statuses.
+        if (Arr::has($response, 'message') == 'duplicate') {
+            throw new RuntimeException('Duplicated order');
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace MG\Paymob\Traits;
 use MG\Paymob\Traits\Request;
 use Illuminate\Support\Facades\Http;
 
-class WalletPayment extends Request
+trait WalletPayment
 {
     /**
      * Send order to paymob servers.

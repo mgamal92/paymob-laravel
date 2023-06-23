@@ -21,12 +21,12 @@ trait Request
         return $this->base_url;
     }
 
-    public function get($url, $params = []) : Returntype
+    public function get($url, $params = [])
     {
         return $this->request('get', $url, $params);
     }
 
-    public function post($url, $params = []) : Returntype
+    public function post($url, $params = [])
     {
         return $this->request('post', $url, $params);
     }
