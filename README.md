@@ -76,8 +76,9 @@ public function checkout(){
     $orderToPrepare['items']             = $orderItems;
     $orderToPrepare['billing_data']      = $billingData;
 
+    $payment = app(Paymob::class);
     // Get payment URL
-    $paymentUrl = $item->makePayment($orderToPrepare);
+    $paymentUrl = $payment->makePayment($orderToPrepare);
 
     return $paymentUrl;
 }
