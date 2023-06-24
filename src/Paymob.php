@@ -9,8 +9,8 @@ use MG\Paymob\Traits\PaymentFlow;
 use MG\Paymob\Traits\Request;
 use MG\Paymob\Traits\WalletPayment;
 
-class Paymob
-{
+class Paymob {
+
     use Request;
     use PaymentFlow;
     use CardPayment;

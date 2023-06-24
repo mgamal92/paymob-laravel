@@ -7,22 +7,21 @@ namespace MG\Paymob\Traits;
 use MG\Paymob\Traits\Request;
 use Illuminate\Support\Facades\Http;
 
-trait WalletPayment
-{
+trait WalletPayment {
+
     /**
      * Send order to paymob servers.
      */
-    public function prepareWalletRedirectionUrl(string $paymentToken, string $mobileWallet = null): array
-    {
+    public function prepareWalletRedirectionUrl(string $paymentToken, string $mobileWallet = null): array {
         $json = [
             'payment_token' => $paymentToken,
-            'source' => [
-                'subtype' => 'WALLET',
+            'source'        => [
+                'subtype'    => 'WALLET',
                 'identifier' => $mobileWallet,
             ],
         ];
 
-        return  $this->post(
+        return $this->post(
             '/acceptance/payments/pay',
             $json
         );

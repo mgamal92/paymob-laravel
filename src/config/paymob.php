@@ -43,9 +43,9 @@ return [
 //    PAYMOB_WALLET_IFRAME_ID="455521"
 
     'auth' => [
-        'api_key' => env('PAYMOB_API_KEY', 'ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SmpiR0Z6Y3lJNklrMWxjbU5vWVc1MElpd2ljSEp2Wm1sc1pWOXdheUk2TXpjeU5ERXhMQ0p1WVcxbElqb2lhVzVwZEdsaGJDSjkuTHpoYXhMUThMWmprV2V2TmJmXzRRWXpMazBXcUx3elFrR0J0d1dqaTg0dWcyR0kxYm13bGJVcl9yb2h3NEo2OWR4OUZEdXNCQm9ONjRETlBPOTJUbkE='),
-        'integration_id' => env('PAYMOB_INTEGRATION_ID', '2651704'),
-        'iframe_id' => env('PAYMOB_IFRAME_ID', '455520'),
+        'api_key' => env('PAYMOB_API_KEY'),
+        'integration_id' => env('PAYMOB_INTEGRATION_ID'),
+        'iframe_id' => env('PAYMOB_IFRAME_ID'),
         'hmac_secret' => env('PAYMOB_HMAC_SECRET'),
     ],
 ];

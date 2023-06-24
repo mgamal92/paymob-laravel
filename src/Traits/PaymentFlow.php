@@ -8,70 +8,65 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use RuntimeException;
 
-trait PaymentFlow
-{
+trait PaymentFlow {
+
     /**
      * Paymob Authentication.
      */
-    public function auth(): array
-    {
+    public function auth(): array {
         // Request body
         $json = [
             'api_key' => config('paymob.auth.api_key'),
         ];
         // Send curl
-        return   $this->post(
+        return $this->post(
             '/auth/tokens',
             $json
-        );
+        )->json();
     }
 
     /**
      * Send order to paymob servers.
      */
-    public function makeOrder(string $token, bool $deliveryNeeded, int $amountCents, array $items, int $merchantOrderId): array
-    {
+    public function makeOrder(string $token, bool $deliveryNeeded, int $amountCents, array $items, int $merchantOrderId): array {
         $json = [
-            'auth_token' => $token,
-            'delivery_needed' => $deliveryNeeded,
-            'amount_cents' => $amountCents,
-            'items' => $items,
+            'auth_token'        => $token,
+            'delivery_needed'   => $deliveryNeeded,
+            'amount_cents'      => $amountCents,
+            'items'             => $items,
             'merchant_order_id' => $merchantOrderId,
         ];
 
-
-        return   $this->post(
+        return $this->post(
             '/ecommerce/orders',
             $json
-        );
+        )->json();
     }
 
     /**
      * Get Payment key to load iframe on paymob servers.
      */
-    public function getPaymentKey(string $token, int $amountCents, int $expiration, int $orderId, array $billingData, string $currency): array
-    {
+    public function getPaymentKey(string $token, int $amountCents, int $expiration, int $orderId, array $billingData, string $currency): array {
         $json = [
-            'auth_token' => $token,
-            'amount_cents' => $amountCents,
-            'expiration' => $expiration,
-            'order_id' => $orderId,
-            'billing_data' => $billingData,
-            'currency' => $currency,
+            'auth_token'     => $token,
+            'amount_cents'   => $amountCents,
+            'expiration'     => $expiration,
+            'order_id'       => $orderId,
+            'billing_data'   => $billingData,
+            'currency'       => $currency,
             'integration_id' => config('paymob.auth.integration_id'),
         ];
 
-        return   $this->post(
+        return $this->post(
             '/acceptance/payment_keys',
             $json
-        );
+        )->json();
     }
 
     /**
      * authenticate request.
      */
-    private function authenticate(): string
-    {
+    private function authenticate(): string {
         $authResponse = $this->auth();
 
         return $authResponse['token'];
@@ -80,25 +75,20 @@ trait PaymentFlow
     /**
      * register order request.
      */
-    private function registerOrder(string $authToken, array $data): int
-    {
+    private function registerOrder(string $authToken, array $data): int {
         $deliveryNeeded = $data['delivery_needed'] ?? false;
         $amountCents = $data['amount_cents'] ?? 0;
         $items = $data['items'] ?? [];
         $merchantOrderId = $data['merchant_order_id'] ?? null;
 
         $orderResponse = $this->makeOrder($authToken, $deliveryNeeded, $amountCents, $items, $merchantOrderId);
-        
-        $this->checkDuplicated($orderResponse);
-
         return $orderResponse['id'];
     }
 
     /**
      * Make payment for API (mobile clients).
      */
-    public function makePayment(array $data, $mobileWallet = null): string
-    {
+    public function makePayment(array $data, $mobileWallet = null): string {
         // step 1 -> Authentication
         $authToken = $this->authenticate();
 
@@ -122,8 +112,7 @@ trait PaymentFlow
     /**
      * create payment token request.
      */
-    private function createPaymentToken(string $authToken, int $orderId, array $data): string
-    {
+    private function createPaymentToken(string $authToken, int $orderId, array $data): string {
         $amountCents = (isset($data['amount_cents']) && $data['amount_cents']) ? $data['amount_cents'] : 0;
         $expiration = (isset($data['expiration']) && $data['expiration']) ? $data['expiration'] : 3600;
         $billingData = (isset($data['billing_data']) && $data['billing_data']) ? $data['billing_data'] : [];
@@ -135,8 +124,7 @@ trait PaymentFlow
     }
 
 
-    private function checkDuplicated($response)
-    {
+    private function checkDuplicated($response) {
         // We may need to create an enum for response statuses.
         if (Arr::has($response, 'message') == 'duplicate') {
             throw new RuntimeException('Duplicated order');
