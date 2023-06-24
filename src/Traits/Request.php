@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace MG\Paymob\Traits;
 
 use Exception;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 trait Request {
@@ -27,7 +28,7 @@ trait Request {
         return $this->request('post', $url, $params);
     }
 
-    private function request(string $method, string $url, array $params) {
+    private function request(string $method, string $url, array $params): Response {
         try {
             $fullUrl = $this->base_url . $url;
             $response = Http::$method($fullUrl, $params);
@@ -39,9 +40,8 @@ trait Request {
     }
 
 
-    public function checkNotSuccessfullyResponse($response) {
-        $failed = [500, 404, 405, 422, 401];
-        if (in_array($response->status(), $failed)) {
+    public function checkNotSuccessfullyResponse(Response $response) {
+        if (!$response->successful()) {
             throw new Exception($response->getBody()->getContents(), $response->status());
         }
     }
